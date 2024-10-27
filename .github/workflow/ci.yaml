@@ -19,6 +19,6 @@ jobs:
         with:
           filename: VERSION
 
-      - uses: hashibuto/actions/tagger@master
+      - uses: hashibuto/actions/tagger@tagger-v0
         with:
           create-version-tag: 'true'

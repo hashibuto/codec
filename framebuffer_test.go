@@ -1,6 +1,7 @@
 package codec
 
 import (
+	"encoding/binary"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -8,15 +9,18 @@ import (
 
 func TestFrameMaker(t *testing.T) {
 	text := "hello world"
-	frame := MakeDataFrame([]byte(text))
+	frame := MakeSimpleDataFrame([]byte(text))
 	assert.Len(t, frame, len(text)+4)
 }
 
 func TestFrameBuffer(t *testing.T) {
 	text := "hello world"
-	frame := MakeDataFrame([]byte(text))
+	frame := MakeSimpleDataFrame([]byte(text))
 
-	var fb FrameBuffer
+	fb := NewFrameBuffer(Config{
+		LengthFieldInBytes:   4,
+		LengthFieldByteOrder: binary.BigEndian,
+	})
 
 	fb.Write(frame[:5])
 	outFrame := fb.Read()
@@ -24,5 +28,5 @@ func TestFrameBuffer(t *testing.T) {
 
 	fb.Write(frame[5:])
 	outFrame = fb.Read()
-	assert.Equal(t, []byte(text), outFrame)
+	assert.Equal(t, frame, outFrame)
 }

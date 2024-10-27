@@ -30,6 +30,8 @@ func Decode8Byte(byteOrder binary.ByteOrder, source []byte) int {
 	return int(byteOrder.Uint64(source))
 }
 
+// FrameBuffer is a buffer intended to parse and emit arbitrary framed data, where all that needs to be known is the
+// length offset in the frame payload, the size of the length field, and the endianness of the data.
 type FrameBuffer struct {
 	config Config
 

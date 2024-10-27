@@ -29,4 +29,12 @@ func TestFrameBuffer(t *testing.T) {
 	fb.Write(frame[5:])
 	outFrame = fb.Read()
 	assert.Equal(t, frame, outFrame)
+
+	fb.Write(frame[:5])
+	outFrame = fb.Read()
+	assert.Nil(t, outFrame)
+
+	fb.Write(frame[5:])
+	outFrame = fb.Read()
+	assert.Equal(t, frame, outFrame)
 }

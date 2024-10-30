@@ -6,6 +6,8 @@ package codec
 
 type Codec interface {
 	// Encodes a byte array and returns the encoded byte array.  If no encoded data is available, `nil` will be returned.
+	// If an empty/null payload is passed to encode, the chain of codecs will be flushed for any remaining data which has not
+	// yet been encoded.
 	Encode(data []byte) ([]byte, error)
 
 	// Decodes a byte array and returns the decoded byte array.  If a decoder buffers and/or insufficient data is
@@ -26,13 +28,14 @@ func NewCodecChain(codecs ...Codec) *CodecChain {
 }
 
 func (cc *CodecChain) Encode(data []byte) ([]byte, error) {
+	isFlush := len(data) == 0
 	var curData = data
 	for _, codec := range cc.codecs {
 		curData, err := codec.Encode(curData)
 		if err != nil {
 			return nil, err
 		}
-		if curData == nil {
+		if curData == nil && !isFlush {
 			return nil, nil
 		}
 	}

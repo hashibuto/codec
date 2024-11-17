@@ -30,8 +30,9 @@ func NewCodecChain(codecs ...Codec) *CodecChain {
 func (cc *CodecChain) Encode(data []byte) ([]byte, error) {
 	isFlush := len(data) == 0
 	var curData = data
+	var err error
 	for _, codec := range cc.codecs {
-		curData, err := codec.Encode(curData)
+		curData, err = codec.Encode(curData)
 		if err != nil {
 			return nil, err
 		}

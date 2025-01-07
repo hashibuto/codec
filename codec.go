@@ -45,6 +45,7 @@ func (cc *CodecChain) Encode(data []byte) ([]byte, error) {
 }
 
 func (cc *CodecChain) Decode(data []byte) ([]byte, error) {
+	isFlush := len(data) == 0
 	var curData = data
 	var err error
 	for i := 0; i < len(cc.codecs); i++ {
@@ -53,7 +54,7 @@ func (cc *CodecChain) Decode(data []byte) ([]byte, error) {
 		if err != nil {
 			return nil, err
 		}
-		if curData == nil {
+		if curData == nil && !isFlush {
 			return nil, nil
 		}
 	}
